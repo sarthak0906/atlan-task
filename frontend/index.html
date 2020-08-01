@@ -1,0 +1,93 @@
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div class="file-upload">
+            <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
+
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" type='file' onchange="readURL(this);" accept="*" />
+                <div class="drag-text">
+                <h3>Drag and drop a file or select add Image</h3>
+                </div>
+            </div>
+        </div>
+    </body>
+</html> -->
+
+<!doctype html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+<link rel="stylesheet" href="style.css">
+<script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<!-- <script src="script.js"></script> -->
+<body>
+<input type="file" onchange="readFile(this)">
+
+<script>
+function readFile(input) {
+    let file = input.files[0];
+
+    let reader = new FileReader();
+
+    reader.readAsArrayBuffer(file);
+
+    reader.onload = async function() {
+        let a1 = reader.result;
+        console.log(a1);
+        var uint8View = new Uint8Array(a1);
+        // let data = uint8View.subarray(0,1000);
+        console.log(uint8View.subarray(0,1000));
+        // const response = await fetch('http://localhost:8000/pauseable', {
+        //     method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        //     mode: 'no-cors', // no-cors, *cors, same-origin
+        //     headers: {
+        //     'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({file: data, something: "asfkjahnsk"}), // body data type must match "Content-Type" header
+        // });
+        // console.log(response);
+        const data = { username: 'example' };
+        const len = uint8View.length;
+        let a = 0;
+        while(a < len){
+            let up = await Math.min(a+900, len);
+            await $.ajax({
+                type: 'POST',
+                mode: 'no-cors',
+                url: 'http://localhost:8000/pauseable', data: {
+                    name: file.name,
+                    start : a,
+                    file: uint8View.subarray(a, up),
+                },
+            }).done(function(res) {
+                console.log(res);
+                a = up;
+            })
+            await setTimeout(10000);
+        }
+        // $.ajax({
+        //     type: 'POST', url: 'http://localhost:8000/pauseable', data: {
+        //         name: file.name,
+        //         file: uint8View.subarray(a, len),
+        //     },
+        // }).done(function(res) {
+        //     console.log(res);
+        // })
+    };
+
+    reader.onerror = function() {
+        console.log(reader.error);
+    };
+}
+</script>
+</body> 
