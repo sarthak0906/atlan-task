@@ -1,6 +1,8 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 var bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 
 var allowCrossDomain = function(req, res, next) {
@@ -19,6 +21,8 @@ app.use(bodyParser.urlencoded({
 // parse application/json
 app.use(bodyParser.json())
 app.use(cors());
+
+app.use(express.static(path.join(__dirname, '../react-frontend/build')));
 
 var fle;
 
@@ -66,6 +70,11 @@ app.post('/pauseable', (req, res) => {
         }
     }
 })
+
+// Handles any requests that don't match the ones above
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
 app.listen('8000', () => {
     console.log("listening to 8000");

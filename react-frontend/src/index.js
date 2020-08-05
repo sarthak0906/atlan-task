@@ -100,7 +100,7 @@ const App = (props) => {
       <input type="file" onChange={fileChange} key={inputKey} />
       {
         (!!file) ? <div>
-          <button name="pause"  onClick={PauseClick} > Pause </button>
+          <button name="pause"  onClick={PauseClick} > {(pause) ? "Resume" : "Pause"} </button>
           <button onClick={CancelUpload}> Cancel </button>
         </div> : ""
       }
