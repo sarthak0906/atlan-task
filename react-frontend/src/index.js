@@ -93,9 +93,9 @@ const App = (props) => {
 
   return (
     <div>
-      <Hello name={"this.state.name"} />
+      <Hello name={"Atlan"} />
       <p>
-        Start editing to see some magic happen :)
+        Select a file to see the magic ;)
       </p>
       <input type="file" onChange={fileChange} key={inputKey} />
       {
