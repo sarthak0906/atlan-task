@@ -51,27 +51,6 @@ const App = (props) => {
           start : top,
           file: (uint8View.subarray(top, up)),
         });
-        // fetch('http://localhost:8000/pauseable', {
-        //   method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        //   mode: 'no-cors', // no-cors, *cors, same-origin
-        //   data: JSON.stringify({
-        //     name: file.name,
-        //     start : top,
-        //     file: uint8View.subarray(top, up),
-        //   })
-        // })
-        // .then(
-        //   (result) => {
-        //     console.log(result);
-        //     setTop(up);
-        //   },
-        //   // Note: it's important to handle errors here
-        //   // instead of a catch() block so that we don't swallow
-        //   // exceptions from actual bugs in components.
-        //   (error) => {
-        //     console.log(error);
-        //   }
-        // )
       }
       else if (top == up){
         alert("file upload complete");
@@ -81,7 +60,7 @@ const App = (props) => {
         setuint8View(null);
         setinputKey(Math.random())
       }
-    }, 10000);
+    }, 1000);
     return () => clearInterval(interval);
   }, [top, timer, file]);
 
@@ -91,6 +70,21 @@ const App = (props) => {
 
   const PauseClick = () => {
     setPause(!pause);
+  }
+
+  const CancelUpload = () => {
+    axios.get('http://localhost:8000/cancel/' + file.name)
+    .then(() => {
+      alert("file upload canceled");
+      setFile(null);
+      setTop(0);
+      setFileOut(null);
+      setuint8View(null);
+      setinputKey(Math.random())
+    })
+    .catch((e) => {
+      console.log(e)
+    })
   }
 
   React.useEffect(() => {
@@ -105,7 +99,10 @@ const App = (props) => {
       </p>
       <input type="file" onChange={fileChange} key={inputKey} />
       {
-        (!!file) ? <div> <button name="pause"  onClick={PauseClick} > Pause </button> <p> {Math.floor((top / uint8View.length) * 10000) / 100} % Upload Complete </p> </div> : ""
+        (!!file) ? <div>
+          <button name="pause"  onClick={PauseClick} > Pause </button>
+          <button onClick={CancelUpload}> Cancel </button>
+        </div> : ""
       }
     </div>
   );

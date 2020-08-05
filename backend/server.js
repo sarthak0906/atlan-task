@@ -22,6 +22,18 @@ app.use(cors());
 
 var fle;
 
+app.get('/cancel/:file', (req, res) => {
+    fs.unlink(req.params.file, (err) => {
+        if (err) {
+            console.error(err)
+            res.send(err)
+        }
+    
+        //file removed
+        res.send("file removed");
+    })
+})
+
 app.post('/pauseable', (req, res) => {
     if (req.body == {}){
         res.send("Please send something at least man");

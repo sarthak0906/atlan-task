@@ -1,9 +1,0 @@
-rofile produser --query "Reservations[].Instances[].InstanceId"
-aws ec2 run-instances --image-id amstances[].InstanceId"
-aws ec2 describe-instances --profile produser
-aws ec2 describe-instances --paws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro" --query "Reservations[].Ini-02d55cb47e83a99a0 --count 1 --instance-type g4dn.xlarge --key-name zecide-key --security-group-idser --filters "Name=instance-type,Values=g4dn.xlarge" --query "Reservations[].Instances[].InstanceId"[].Instances[].InstanceId"
-aws ec2 start-instances --instance-ids i-0602cf9ec957a614a --profile pro sg-174af374 --profile produser
-aws ec2 describe-instances --profile produser --query "Reservationsduser
-aws ec2 describe-instances --profile produser --filters "Name=instance-type,Values=g4dn.xlarge" --query "Reservations[].Instances[].PublicDnsName"
-
-aws ec2 describe-instances --profile produs
