@@ -3,6 +3,15 @@ var bodyParser = require('body-parser');
 const fs = require('fs');
 const cors = require('cors');
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+};
+
+app.use(allowCrossDomain);
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
     extended: true
@@ -14,51 +23,38 @@ app.use(cors());
 var fle;
 
 app.post('/pauseable', (req, res) => {
-    console.log(req.body)
-    fle = req.body.file;
-    var uint8View1 = new Uint8Array(fle);
-    if (req.body.start == 0){
-        fs.writeFile(req.body.name, Buffer.from(uint8View1), (e,d) => {
-            if (e){
-                console.log(e);
-                res.send(e);
-            }
-            else{
-                console.log(d);
-                res.send("d");
-            }
-        });
+    if (req.body == {}){
+        res.send("Please send something at least man");
     }
-    else{
-        fs.appendFileSync(req.body.name, Buffer.from(uint8View1));
-        res.send("req.body.file");
+    else {
+        console.log(req.body.start)
+        fle = Object.values(req.body.file);
+        var uint8View1 = new Uint8Array(fle);
+        if (req.body.start == 0){
+            fs.writeFile(req.body.name, Buffer.from(uint8View1), (e,d) => {
+                if (e){
+                    console.log(e);
+                    res.send(e);
+                }
+                else{
+                    res.send("d");
+                }
+            });
+        }
+        else{
+            fs.appendFile(req.body.name, Buffer.from(uint8View1), (e,d) => {
+                if (e){
+                    console.log(e);
+                    res.send(e);
+                }
+                else{
+                    res.send("req.body.file");
+                }
+            });
+        }
     }
 })
 
 app.listen('8000', () => {
     console.log("listening to 8000");
 })
-
-
-// let file = $('input')[0].files[0]
-// let reader = new FileReader()
-// reader.readAsArrayBuffer(file)
-// reader.onload = async function(){
-//     let ui = new Uint8Array(reader.result);
-//     const len = ui.length;
-//     let a = 0;
-//     while(a < len){
-//         let up = await Math.min(a+100, len);
-//         await $.ajax({
-//                 type: 'POST',
-//                 mode: 'no-cors',
-//                 url: 'http://localhost:8000/pauseable',
-//                 data : {
-//                     name: file.name,
-//                     start : a,
-//                     file: uint8View.subarray(a, up),
-//                 }})
-//         .done((r) => console.log(r))
-//         .catch(e => console.log(e))
-//     }
-// }

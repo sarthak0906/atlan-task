@@ -34,8 +34,19 @@
 <input type="file" onchange="readFile(this)">
 
 <script>
+var pause = false;
+
 function readFile(input) {
     let file = input.files[0];
+    var buttonnode= document.createElement('input');
+    buttonnode.setAttribute('type','button');
+    buttonnode.setAttribute('name','pause');
+    buttonnode.setAttribute('value','pause');
+    buttonnode.onclick = pause = !pause;
+    var linebreak = document.createElement('br');
+    $('body')[0].appendChild(linebreak);
+    $('body')[0].appendChild(buttonnode);
+    console.log(buttonnode);
 
     let reader = new FileReader();
 
@@ -60,20 +71,28 @@ function readFile(input) {
         const len = uint8View.length;
         let a = 0;
         while(a < len){
-            let up = await Math.min(a+900, len);
-            await $.ajax({
-                type: 'POST',
-                mode: 'no-cors',
-                url: 'http://localhost:8000/pauseable', data: {
-                    name: file.name,
-                    start : a,
-                    file: uint8View.subarray(a, up),
-                },
-            }).done(function(res) {
-                console.log(res);
-                a = up;
-            })
-            await setTimeout(10000);
+            console.log("Inside while");
+            setTimeout(() => {
+                console.log("Inside while timeout");
+                if (pause){
+                    console.log("Paused");
+                }
+                else {
+                    let up = Math.min(a+900, len);
+                    $.ajax({
+                        type: 'POST',
+                        mode: 'no-cors',
+                        url: 'http://localhost:8000/pauseable', data: {
+                            name: file.name,
+                            start : a,
+                            file: uint8View.subarray(a, up),
+                        },
+                    }).done(function(res) {
+                        console.log(res);
+                        a = up;
+                    })
+                }
+            }, 0);
         }
         // $.ajax({
         //     type: 'POST', url: 'http://localhost:8000/pauseable', data: {
