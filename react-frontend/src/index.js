@@ -36,7 +36,7 @@ const App = (props) => {
       }
       console.log(up);
       if (top < up && !pause){
-        axios.post('http://localhost:8000/pauseable', {
+        axios.post('/pauseable', {
           name: file.name,
           start : top,
           file: uint8View.subarray(top, up),
@@ -73,7 +73,7 @@ const App = (props) => {
   }
 
   const CancelUpload = () => {
-    axios.get('http://localhost:8000/cancel/' + file.name)
+    axios.get('/cancel/' + file.name)
     .then(() => {
       alert("file upload canceled");
       setFile(null);
